@@ -24,8 +24,10 @@ function Home() {
   const [title, setTitle] = useState('')
   const [filtro, setFiltro] = useState<FiltroTipo>('posiciones')
   const [estadisticas, setEstadisticas] = useState<Estadistica[]>([])
+  const [busqueda, setBusqueda] = useState('')
   
   const filtros: FiltroTipo[] = ['posiciones', 'goleador', 'asistencias', 'amarillas', 'atajadas']
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,6 +72,20 @@ function Home() {
   "Deportivo Pereira FC": "pereira"
 };
 
+
+  const rankingFiltrado = ranking.filter((equipo) =>
+    busqueda.length <3
+  ? true:
+  equipo.contestantName.toLowerCase().includes(busqueda.toLowerCase())
+  )
+
+  const estadisticasfiltradas = estadisticas.filter((jugador) =>
+    busqueda.length <3
+  ? true:
+  jugador.name.toLowerCase().includes(busqueda.toLowerCase()) ||  
+  jugador.contestantName.toLowerCase().includes(busqueda.toLowerCase())
+)
+
   return (
     <>
           <div className="filtros">
@@ -82,33 +98,45 @@ function Home() {
             {onestat}
           </button>
         ))}
+          <br />
+          <input
+        type="text"
+        placeholder="Buscar..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
       </div>
-    <div className="tabla-container">
-      <h2>{title}</h2>
-       {filtro === 'posiciones' ? (
-      <table className="tabla-posiciones">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Equipo</th>
-            <th>PJ</th>
-            <th>Pts</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ranking.map((equipo) => (
-            <tr key={equipo.rank}>
-              <td>{equipo.rank}</td>
-                        <Link to={`/equipo/${equiposMap[equipo.contestantName]}`}>
+
+     <div className="tabla-container">
+      <br />
+        <h2>{title}</h2>
+        {filtro === 'posiciones' ? (
+          <table className="tabla-posiciones">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Equipo</th>
+                <th>PJ</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rankingFiltrado.map((equipo) => (
+                <tr key={equipo.rank}>
+                  <td>{equipo.rank}</td>
+                  <td>
+                        <Link to={`/equipo/${equiposMap[equipo.contestantName] || "default"}`}>
                         {equipo.contestantName}
                       </Link>
-              <td>{equipo.matchesPlayed}</td>
-              <td>{equipo.points}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>) :  (
-        <table className="tabla-estadisticas">
+                  </td>
+                  <td>{equipo.matchesPlayed}</td>
+                  <td>{equipo.points}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <table className="tabla-estadisticas">
             <thead>
               <tr>
                 <th>#</th>
@@ -119,20 +147,20 @@ function Home() {
               </tr>
             </thead>
             <tbody>
-              {estadisticas.map((stat, index) => (
+              {estadisticasfiltradas.map((jugador, index) => (
                 <tr key={index}>
-                  <td>{stat.position}</td>
-                  <td>{stat.name}</td>
-                  <td>{stat.contestantName}</td>
-                  <td>{stat.appearances}</td>
-                  <td>{stat.value}</td>
+                  <td>{jugador.position}</td>
+                  <td>{jugador.name}</td>
+                  <td>{jugador.contestantName}</td>
+                  <td>{jugador.appearances}</td>
+                  <td>{jugador.value}</td>
                 </tr>
-              ))} 
-              </tbody>
-        </table>
-      )}
-    </div>
-  </>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </>
   )
 }
 

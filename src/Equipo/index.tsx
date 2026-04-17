@@ -56,6 +56,8 @@ function Equipo() {
   return (
     <>
       <p>{data.team.name}</p>
+      //buton favorito y crear estado para mostrar si es favorito o no y crear un json en el local storage para guardar los favoritos y mostrar un mensaje de agregado a favoritos en la pestaña favorito
+      // tiene que mostrarme los equipos como los trae desde la url no convertirlos a los nombres 
       <p>{data.team.info.stadium}</p>
     </>
   )
