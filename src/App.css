@@ -1,3 +1,57 @@
+:root {
+  color-scheme: light;
+  color: #111827;
+  background: #f8fafc;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, rgba(129,140,248,0.15), transparent 35%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  color: #111827;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+h1{
+  color: #111827;
+}
+h2{
+  color: #111827;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 0.35rem;
+}
+
 #root{
   margin: 30px auto 150px;
   width: calc(100% - 40px);
@@ -190,7 +244,7 @@
 
 
 .c-menu{
-    background: silver;
+    background: rgba(255,255,255,0.96);
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -198,7 +252,33 @@
     width: 100%;
     bottom: 0;
     left: 0;
-    padding: 10px 0;
+    padding: 12px 10px;
+    border-top: 1px solid #dbe2ef;
+    box-shadow: 0 -10px 25px rgba(15, 23, 42, 0.08);
+    z-index: 1000;
+}
+
+.c-menu a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #eef4ff;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.c-menu a:hover {
+    background: #dbeafe;
+    transform: translateY(-1px);
+}
+
+.c-menu a:first-child::before {
+    content: "Home";
 }
 
 .c-menu img{

@@ -1,10 +1,9 @@
-import { useParams } from 'react-router';
-import { useState, useEffect } from 'react'
-import "./style.css"
+import { useParams } from "react-router";
+import { useEffect, useState } from "react";
 
 interface TeamData {
   team: {
-    name: string;   
+    name: string;
     info: {
       city: string;
       founded: string;
@@ -32,9 +31,16 @@ function Equipo() {
   const { equipo } = useParams<{ equipo: string }>();
 
   const [data, setData] = useState<TeamData | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
   if (!equipo) return;
+
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+  if (favorites.includes(equipo)) {
+    setIsFavorite(true);
+  }
 
   const fetchData = async () => {
     try {
@@ -52,15 +58,84 @@ function Equipo() {
   fetchData();
 }, [equipo]);
 
+  const toggleFavorite = () => {
+  if (!equipo) return;
+
+  let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+  if (favorites.includes(equipo)) {
+      favorites = favorites.filter((fav: string) => fav !== equipo);
+      setIsFavorite(false);
+    } else {
+      favorites.push(equipo);
+      setIsFavorite(true);
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  };
+
+  const favoriteIcon = isFavorite
+    ? equipo?.toLowerCase() === "millonarios"
+      ? "💙"
+      : "❤️"
+    : "🤍";
+
   if (!data) return <p>Cargando...</p>;
+
   return (
-    <>
-      <p>{data.team.name}</p>
-      //buton favorito y crear estado para mostrar si es favorito o no y crear un json en el local storage para guardar los favoritos y mostrar un mensaje de agregado a favoritos en la pestaña favorito
-      // tiene que mostrarme los equipos como los trae desde la url no convertirlos a los nombres 
-      <p>{data.team.info.stadium}</p>
-    </>
-  )
+    <div>
+      <h1>{data.team.name}
+
+        <button onClick={toggleFavorite}>
+          {favoriteIcon}
+        </button>
+      </h1>
+
+      <h2>Información</h2>
+      <p><strong>Ciudad:</strong> {data.team.info.city}</p>
+      <p><strong>Fundado:</strong> {data.team.info.founded}</p>
+      <p><strong>Estadio:</strong> {data.team.info.stadium}</p>
+      <p><strong>Presidente:</strong> {data.team.info.president}</p>
+      <p><strong>Último título:</strong> {data.team.info.last_title}</p>
+
+      <h2>Ranking</h2>
+      <p><strong>Posición:</strong> {data.team.ranking.position}</p>
+      <p><strong>Competencia:</strong> {data.team.ranking.competition}</p>
+
+      <h2>Redes</h2>
+      <ul>
+        <li>
+          <a href={data.team.social.facebook} target="_blank" rel="noreferrer">
+            Facebook
+          </a>
+        </li>
+        <li>
+          <a href={data.team.social.instagram} target="_blank" rel="noreferrer">
+            Instagram
+          </a>
+        </li>
+        <li>
+          <a href={data.team.social.x} target="_blank" rel="noreferrer">
+            X (Twitter)
+          </a>
+        </li>
+      </ul>
+
+      <h2>Extras</h2>
+      <ul>
+        <li>
+          <a href={data.team.links.store} target="_blank" rel="noreferrer">
+            Tienda oficial
+          </a>
+        </li>
+        <li>
+          <a href={data.team.links.tickets} target="_blank" rel="noreferrer">
+            Comprar boletas
+          </a>
+        </li>
+      </ul>
+    </div>
+  );
 }
 
-export default Equipo
+export default Equipo;
